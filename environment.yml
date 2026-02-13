@@ -1,0 +1,17 @@
+name: vancouver-food-dashboard
+channels:
+  - conda-forge
+dependencies:
+  - make
+  - matplotlib=3.10.8
+  - altair=6.0.0
+  - pytest=9.0.2
+  - pandas=2.3.3
+  - python=3.12
+  - scikit-learn=1.7.2
+  - jupyter=1.1.1
+  - conda-lock=3.0.4
+  - vl-convert-python=1.8.0
+  - numpy=1.26.4
+  - vegafusion=1.6.9
+  - shiny
