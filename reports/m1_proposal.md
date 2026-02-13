@@ -7,6 +7,13 @@
 ## Research Questions & Usage Scenarios
 
 ## Exploratory Data Analysis
+![Local Vancouver Regions](../img/local_area.png)
+As show above, we can see that this data will allow us to filter by local area of Vancouver. This will be helpful for users who want to find the nearest low-cost food program to them. 
+
+![Scatterplot Map](../img/map.png)
+From the above image, our dataset will allow us to create an interactive map where we can label each local food program location to aid understanding. 
+
+In our dataset, there are also features that specify whether the food program is wheelchair accessible, free or low-cost, whether a referral is required or not, and whether the program is running or not. This will allow users to filter locations based on their needs. 
 
 ## App Sketch & Description
 
