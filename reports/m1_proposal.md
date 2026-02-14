@@ -8,6 +8,13 @@
 ## Description of the Data
 
 ## Research Questions & Usage Scenarios
+Usage Scenario
+
+> Diana is a single mother living in Vancouver who often struggles to access affordable and nutritious food. She wants to find nearby free or low-cost food programs that fit her schedule and provide the type of support her family needs. She wants to be able to explore program locations, filter by service type, and identify options that are accessible by transportation.
+
+When Diana logs on to our "Vancouver Food Dashboard", she will see a map of all available food programs in Vancouver, along with a summary list including program type, location, hours, and eligibility. She can filter programs by type, wheelchair accessibility or by area of the city. Lena may notice that certain neighborhoods have very few programs and that some programs operate only on specific days, helping her plan her week to access food efficiently.
+
+Based on her exploration of the dashboard, Diama can make informed decisions about which programs to visit, plan her route, and even share information with friends or neighbors who might need similar support.
 
 ## Exploratory Data Analysis
 
