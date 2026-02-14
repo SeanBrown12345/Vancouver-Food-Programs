@@ -1,5 +1,11 @@
 # Vancouver Food Programs Dashboard
 
+This project builds a dashboard to help Vancouver residents experiencing food insecurity find free and low-cost food supports (e.g., meal programs and food hampers). Many programs exist, but information can be hard to search and compare. Our dashboard supports practical decision-making by letting users explore programs on a map and filter by service type, cost, and access requirements. We chose the City of Vancouver Food Programs dataset because it includes both program details and geospatial information needed for exploration.
+
+## Data
+
+The dashboard uses a snapshot of the City of Vancouver “Free and Low-Cost Food Programs” dataset stored in `data/food_program_data.csv`.
+
 ## Usage
 
 Follow these steps to run the dashboard locally on your machine:
@@ -10,7 +16,7 @@ Follow these steps to run the dashboard locally on your machine:
     ```
 2. Navigate to the project directory:
    ```bash
-   cd DSCI-532_2026_22_Vancouver-Food-Programs
+   cd DSCI-532_2026_22_Vancouver-LC_Food-Programs
    ```
 3. Install the environment:
    ```bash

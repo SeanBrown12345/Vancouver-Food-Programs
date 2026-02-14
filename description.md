@@ -1,0 +1,1 @@
+This dashboard helps Vancouver residents find free and low-cost food programs across the city. Users can explore locations on a map and filter programs by service type, cost, and basic access requirements.
