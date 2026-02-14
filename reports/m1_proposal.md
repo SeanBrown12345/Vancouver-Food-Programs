@@ -6,6 +6,18 @@
 > Many residents in Vancouver face challenges accessing affordable and nutritious food due to financial hardship, housing instability, or transportation barriers. Although numerous free and low-cost food programs exist, the available information is often presented in formats that are not easy for residents to navigate. Individuals may struggle to determine which programs are near them, what services are offered, and how to access them. To address this issue, we propose building a user-friendly data visualization dashboard that helps residents quickly identify food programs based on location and service type. By transforming raw data into an accessible and interactive tool, our dashboard aims to improve awareness of available resources and make it easier for residents to connect with the support they need.
 
 ## Description of the Data
+> We will use the City of Vancouver “Free and Low-Cost Food Programs” dataset, which lists community food supports (e.g., meal programs and food hampers) across Vancouver. Each row represents a program listing at a specific location.
+
+In our current downloaded snapshot, the dataset contains **80 rows** and **26 columns**. Key variables include:
+- **Program details** (e.g., `Program Name`, `Organization Name`, `Program Status`, `Description`) to explain what the service is and whether it is currently operating.
+- **Service type** (e.g., `Provides Meals`, `Provides Hampers`) to let users filter programs based on what support they need.
+- **Location information** (e.g., `Location Address`, `Local Areas`, `Latitude`, `Longitude`) to support map-based exploration and “near me” searching (most records have coordinates).
+- **Access constraints** (e.g., `Delivery Available`, `Takeout Available`, `Wheelchair Accessible`) to help users identify feasible options.
+- **Affordability** (e.g., `Meal Cost`, `Hamper Cost`) to distinguish free vs low-cost programs.
+- **Sign-up/referral requirements** (e.g., `Signup Required`, `Requires Referral`, and contact fields) to clarify what steps are needed before attending.
+- **Last updated** (`Last Update Date`) to show how recently program information was refreshed.
+
+Overall, this dataset supports our dashboard goals because it enables users to filter programs by **need (meals vs hampers), feasibility (cost and accessibility), and location (map + local area)**, which directly matches our user stories.
 
 ## Research Questions & Usage Scenarios
 Usage Scenario
