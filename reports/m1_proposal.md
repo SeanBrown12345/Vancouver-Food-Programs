@@ -27,6 +27,24 @@ Based on her exploration of the dashboard, Diama can make informed decisions abo
 > **User Story 3:**
 > As a resident, I want to view the population each program serves (e.g., children, older adults, families, indigenous elders) so that I can find programs that are appropriate for me and my family.
 
+### Jobs to Be Done
+
+> **JTBD 1:**
+> **Situation:** When I need to plan meals for the week...
+> **Motivation:** ...I want to know which food programs are nearby and open on the days I’m available...
+> **Outcome:** ...So I can ensure my family has access to nutritious food without unnecessary travel.
+>
+> **JTBD 2:**
+> **Situation:** When I’m unfamiliar with my neighborhood...
+> **Motivation:** ...I want to identify programs within walking distance or accessible via public transit...
+> **Outcome:** ...So I can reliably get food without relying on friends or expensive transportation.
+>
+> **JTBD 3:**
+> **Situation:** WWhen I need to compare different food programs...
+> **Motivation:** ...I want to filter programs by the population they serve and eligibility requirements...
+> **Outcome:** ...So I can choose programs that are suitable for my family’s specific needs.
+
+
 ## Exploratory Data Analysis
 
 ## App Sketch & Description
