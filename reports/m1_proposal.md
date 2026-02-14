@@ -1,6 +1,9 @@
 # Vancouver Food Programs Dashboard Proposal
 
 ## Motivation and Purpose
+> **Target audience:** Vancouver residents experiencing food insecurity
+>
+> Many residents in Vancouver face challenges accessing affordable and nutritious food due to financial hardship, housing instability, or transportation barriers. Although numerous free and low-cost food programs exist, the available information is often presented in formats that are not easy for residents to navigate. Individuals may struggle to determine which programs are near them, what services are offered, and how to access them. To address this issue, we propose building a user-friendly data visualization dashboard that helps residents quickly identify food programs based on location and service type. By transforming raw data into an accessible and interactive tool, our dashboard aims to improve awareness of available resources and make it easier for residents to connect with the support they need.
 
 ## Description of the Data
 
