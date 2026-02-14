@@ -8,6 +8,42 @@
 ## Description of the Data
 
 ## Research Questions & Usage Scenarios
+Usage Scenario
+
+> Diana is a single mother living in Vancouver who often struggles to access affordable and nutritious food. She wants to find nearby free or low-cost food programs that fit her schedule and provide the type of support her family needs. She wants to be able to explore program locations, filter by service type, and identify options that are accessible by transportation.
+>
+When Diana logs on to our "Vancouver Food Dashboard", she will see a map of all available food programs in Vancouver, along with a summary list including program type, location, hours, and eligibility. She can filter programs by type, wheelchair accessibility or by area of the city. Lena may notice that certain neighborhoods have very few programs and that some programs operate only on specific days, helping her plan her week to access food efficiently.
+>
+Based on her exploration of the dashboard, Diama can make informed decisions about which programs to visit, plan her route, and even share information with friends or neighbors who might need similar support.
+
+### User Stories
+
+> **User Story 1:**
+> As a **resident**, I want to filter food programs by type **(meal service, grocery hamper, food bank)** so that I can quickly find the programs that meet my family’s specific needs.**.
+>
+> **User Story 2:**
+> As a **resident**, I want to see program locations on a map so that I can plan which ones are easiest to get to based on my transportation options.
+>
+> **User Story 3:**
+> As a resident, I want to view the population each program serves (e.g., children, older adults, families, indigenous elders) so that I can find programs that are appropriate for me and my family.
+
+### Jobs to Be Done
+
+> **JTBD 1:**
+> **Situation:** When I need to plan meals for the week...
+> **Motivation:** ...I want to know which food programs are nearby and open on the days I’m available...
+> **Outcome:** ...So I can ensure my family has access to nutritious food without unnecessary travel.
+>
+> **JTBD 2:**
+> **Situation:** When I’m unfamiliar with my neighborhood...
+> **Motivation:** ...I want to identify programs within walking distance or accessible via public transit...
+> **Outcome:** ...So I can reliably get food without relying on friends or expensive transportation.
+>
+> **JTBD 3:**
+> **Situation:** WWhen I need to compare different food programs...
+> **Motivation:** ...I want to filter programs by the population they serve and eligibility requirements...
+> **Outcome:** ...So I can choose programs that are suitable for my family’s specific needs.
+
 
 ## Exploratory Data Analysis
 
