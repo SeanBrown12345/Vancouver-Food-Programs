@@ -6,6 +6,10 @@ This project builds a dashboard to help Vancouver residents experiencing food in
 
 The dashboard uses a snapshot of the City of Vancouver “Free and Low-Cost Food Programs” dataset stored in `data/food_program_data.csv`.
 
+## Demonstration
+
+![](img/demo.gif)
+
 ## Usage
 
 Follow these steps to run the dashboard locally on your machine:
