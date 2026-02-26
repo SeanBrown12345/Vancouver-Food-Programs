@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## 0.1.0
-
+### Added
 - Initial Repo Setup
 - Project Board Setup
 - Drafted a proposal Document
@@ -11,4 +11,21 @@
 - updated README and other relevant files
 
 ## 0.2.0
-- 
+### Added 
+
+
+
+### Changed
+
+
+
+### Fixed
+
+
+### Know
+
+
+### Issues
+
+
+### Reflection 
