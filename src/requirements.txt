@@ -1,0 +1,14 @@
+
+jupyter
+shiny
+altair=6.0.0
+plotnine
+pandas=2.3.3
+polars
+narwhals
+palmerpenguins
+shinylive
+shinywidgets
+keplergl
+setuptools<81
+plotly
