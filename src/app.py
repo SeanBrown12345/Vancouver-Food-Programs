@@ -5,14 +5,11 @@ import ipyleaflet
 
 
 url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/free-and-low-cost-food-programs/records?limit=100"
-
 df = pd.read_json(url)
-
 df = pd.json_normalize(df["results"])
 
 
 meal_cost_choices = ["All"] + sorted([str(x) for x in df["meal_cost"].dropna().unique()])
-
 area_choices = ["All"] + sorted([str(x) for x in df["local_areas"].dropna().unique()])
 
 
