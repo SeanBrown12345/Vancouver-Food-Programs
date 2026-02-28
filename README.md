@@ -12,6 +12,8 @@ The dashboard uses a snapshot of the City of Vancouver “Free and Low-Cost Food
 
 ## Usage For Contributors
 
+Please follow our contribution rules that are found [here](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/blob/main/CONTRIBUTING.md). 
+
 Follow these steps to run the dashboard locally on your machine:
 
 1. Clone the repository to your local machine:
