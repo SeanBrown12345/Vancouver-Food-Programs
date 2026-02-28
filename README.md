@@ -1,16 +1,16 @@
 # Vancouver Food Programs Dashboard
 
-This project builds a dashboard to help Vancouver residents experiencing food insecurity find free and low-cost food supports (e.g., meal programs and food hampers). Many programs exist, but information can be hard to search and compare. Our dashboard supports practical decision-making by letting users explore programs on a map and filter by service type, cost, and access requirements. We chose the City of Vancouver Food Programs dataset because it includes both program details and geospatial information needed for exploration.
-
-## Data
-
-The dashboard uses a snapshot of the City of Vancouver “Free and Low-Cost Food Programs” dataset stored in `data/food_program_data.csv`.
+This project is a dashboard to help Vancouver residents experiencing food insecurity find free or low-cost food supports (e.g., meal programs and food hampers). Many programs exist, but information can be hard to search and compare. Our dashboard supports practical decision-making by letting users explore programs on a map and filter by service type, cost, and access requirements. We chose the City of Vancouver Food Programs dataset because it includes both program details and geospatial information needed for exploration.
 
 ## Demonstration
 
 ![](img/demo.gif)
 
-## Usage
+## Data
+
+The dashboard uses a snapshot of the City of Vancouver “Free and Low-Cost Food Programs” dataset stored in `data/food_program_data.csv`.
+
+## Usage For Contributors
 
 Follow these steps to run the dashboard locally on your machine:
 
@@ -34,6 +34,6 @@ Follow these steps to run the dashboard locally on your machine:
    ```bash
    shiny run --reload src/app.py
    ```
-6. Open your web browser and navigate to `http://localhost:8000` to view the dashboard.
+6. Open your web browser and navigate ![here](http://localhost:8000)  to view the dashboard.
 
 
