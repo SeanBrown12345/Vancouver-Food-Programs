@@ -9,3 +9,4 @@ shinywidgets
 keplergl
 setuptools<81
 plotly
+ipyleaflet
