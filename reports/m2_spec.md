@@ -27,8 +27,6 @@
 | selected_details | Output | `@render.ui` | selected_row | #4 |
 | contact_info | Output | `@render.ui` | selected_row | #4 |
 
-> Note: 11 components listed (>= 8 required for a 4-person team; >= 2 inputs and >= 2 outputs satisfied).
-
 ---
 
 ## 2.3 Reactivity Diagram
