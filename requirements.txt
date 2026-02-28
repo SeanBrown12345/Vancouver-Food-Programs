@@ -1,4 +1,3 @@
-
 shiny
 altair==6.0.0
 plotnine
@@ -10,3 +9,4 @@ shinywidgets
 keplergl
 setuptools<81
 plotly
+ipyleaflet

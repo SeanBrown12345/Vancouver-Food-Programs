@@ -1,12 +1,22 @@
 # Vancouver Food Programs Dashboard
 
-This project builds a dashboard to help Vancouver residents experiencing food insecurity find free and low-cost food supports (e.g., meal programs and food hampers). Many programs exist, but information can be hard to search and compare. Our dashboard supports practical decision-making by letting users explore programs on a map and filter by service type, cost, and access requirements. We chose the City of Vancouver Food Programs dataset because it includes both program details and geospatial information needed for exploration.
+This project is a dashboard to help Vancouver residents experiencing food insecurity find free or low-cost food supports (e.g., meal programs and food hampers). Many programs exist, but information can be hard to search and compare. Our dashboard supports practical decision-making by letting users explore programs on a map and filter by service type, cost, and access requirements. We chose the City of Vancouver Food Programs dataset because it includes both program details and geospatial information needed for exploration.
+
+## Deployment Links: 
+[Stable Version](https://019c9c40-a7bf-b588-73bc-bddb7328a53a.share.connect.posit.cloud)
+[Development](https://019ca585-e08b-d72c-7386-d8b5735f4c67.share.connect.posit.cloud)
+
+## Demonstration
+
+![](img/demo.gif)
 
 ## Data
 
 The dashboard uses a snapshot of the City of Vancouver “Free and Low-Cost Food Programs” dataset stored in `data/food_program_data.csv`.
 
-## Usage
+## Usage For Contributors
+
+Please follow our contribution rules that are found [here](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/blob/main/CONTRIBUTING.md). 
 
 Follow these steps to run the dashboard locally on your machine:
 
@@ -30,6 +40,4 @@ Follow these steps to run the dashboard locally on your machine:
    ```bash
    shiny run --reload src/app.py
    ```
-6. Open your web browser and navigate to `http://localhost:8000` to view the dashboard.
-
-
+6. Open your web browser and navigate [here](http://localhost:8000) to view the dashboard.
