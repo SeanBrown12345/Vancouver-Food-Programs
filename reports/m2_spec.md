@@ -45,7 +45,7 @@ flowchart TD
   O4 --> V([selected_row])
   V --> D([selected_details])
   V --> CI([contact_info])
-````
+```
 
 ---
 
