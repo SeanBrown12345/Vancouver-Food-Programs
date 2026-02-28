@@ -16,7 +16,8 @@
 
 
 ### Changed
-
+- Deviated from original app sketch by removing distribution charts and using those cards for row details instead.
+- Original summary statistics in sketch slightly modified to show proportions instead.
 
 
 ### Fixed
