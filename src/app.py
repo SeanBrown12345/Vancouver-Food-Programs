@@ -11,7 +11,9 @@ df = pd.read_json(url)
 df = pd.json_normalize(df["results"])
 
 
-meal_cost_choices = ["All"] + sorted([str(x) for x in df["meal_cost"].dropna().unique()])
+# meal_cost_choices = ["All"] + sorted([str(x) for x in df["meal_cost"].dropna().unique()])
+meal_cost_choices = ["All", "Free", "Low-cost"]
+
 area_choices = sorted([str(x) for x in df["local_areas"].dropna().unique()])
 
 
@@ -77,8 +79,16 @@ def server(input, output, session):
     def filtered_df():
         dff = df.dropna(subset=["latitude", "longitude"])
 
+        # if input.meal_cost() != "All":
+        #     dff = dff[dff["meal_cost"].astype(str) == input.meal_cost()]
         if input.meal_cost() != "All":
-            dff = dff[dff["meal_cost"].astype(str) == input.meal_cost()]
+            if input.meal_cost() == "Free":
+                dff = dff[dff["meal_cost"].astype(str).str.lower() == "free"]
+            else:  # Low-cost
+                dff = dff[
+                    dff["meal_cost"].astype(str).str.lower().str.contains("low cost") |
+                    dff["meal_cost"].astype(str).str.startswith("$")
+                ]
 
         if input.area():
             dff = dff[dff["local_areas"].astype(str).isin(input.area())]
