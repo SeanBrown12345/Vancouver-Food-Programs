@@ -4,72 +4,382 @@ from shiny import App, ui, render, reactive
 from shinywidgets import output_widget, render_widget
 import pandas as pd
 import ipyleaflet
+import plotly.express as px
 
+from chatlas import ChatGithub
+from dotenv import load_dotenv
+from querychat import QueryChat
+
+load_dotenv()
 
 url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/free-and-low-cost-food-programs/records?limit=100"
 df = pd.read_json(url)
 df = pd.json_normalize(df["results"])
 
-
 meal_cost_choices = ["All"] + sorted([str(x) for x in df["meal_cost"].dropna().unique()])
 area_choices = sorted([str(x) for x in df["local_areas"].dropna().unique()])
 
 
-app_ui = ui.page_fillable(
-    ui.tags.link(href="styles.css", rel="stylesheet"),
+qc = QueryChat(df, "food_programs", client="openai/gpt-4.1")
 
-    ui.layout_sidebar(
-        ui.sidebar(
-            ui.panel_title("Vancouver Food Programs"),
-            ui.hr(),
-            ui.input_select("meal_cost", "Meal cost", choices=meal_cost_choices, selected="All"),
-            ui.hr(),
-            ui.input_selectize("area", "Local Area", choices=area_choices, multiple=True),
-            ui.hr(),
-            ui.input_checkbox_group(
-                "features",
-                "Features",
-                choices=[
-                    "Delivery Available",
-                    "Provides Hampers",
-                    "Takeout Available",
-                    "Wheelchair Accessible",
-                ]
-            ),
-            open="desktop"
-        ),
+
+app_ui = ui.page_fillable(
+#    ui.tags.link(href="styles.css", rel="stylesheet"),
+
+    ui.tags.style("""
+         
+html, body {
+    font-size: 14px;
+    background: linear-gradient(135deg, #f4f9f9 0%, #e8f1f2 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1f2d3d;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    padding: 0px !important;
+    height: 100%;
+    overflow: hidden !important;
+}
+                  
+#mainnavset{
+                  margin-left: 6px !important;}
+
+.collapse-toggle[aria-expanded="true"] .collapse-icon {
+    fill: white !important;
+}
+
+.collapse-toggle[aria-expanded="false"] .collapse-icon {
+    fill: black !important;
+}
+
+.navbar {
+    background-color: #0f3057 !important;
+    color: white !important;
+    padding: 0.75rem 1.25rem !important;
+    font-size: 1.2rem !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 0 0 16px 16px;
+    margin-bottom: 1rem;
+}
+
+.panel_title {
+    background-color: #0f3057;
+    color: white;
+    padding: 1rem 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    border-radius: 0 0 16px 16px;
+    margin-bottom: 1rem;
+            
+}
+
+.navbar, .panel-title {
+    background-color: #ffffff !important;
+    background: #0f3057 !important;
+    color: white !important;
+    padding: 0.75rem 1.25rem !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    
+}
+
+.shiny-options-group{
+    margin-top: 4px;}
+
+.sidebar {
+    background-color: #272c32 !important;
+    border-right: 1px solid #dde6ed;
+    color: #fcfcfc !important;
+
+    border-radius: 0px 8px 8px 0px  !important;
+}
+            
+.bi bi-chevron-left collapse-icon{
+        color: #ffff !important;}
+
+.sidebar .form-control,
+.sidebar .form-select {
+    border-radius: 8px 8px 8px 8spx !important;
+    border: 1px solid #ccd6dd !important;
+}
+
+.sidebar label {
+    font-weight: 600;
+    color: #0f3057;
+}
+
+.card{
+    border-radius: 8px !important;
+    border: none !important;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+
+.card_header {
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    color: #0f3057 !important;
+    border-bottom: 1px solid #eef3f7;
+    padding-bottom: 0.5rem !important;
+    border-radius: 8px;
+
+}
+
+.card-body {
+    padding: 1rem !important;
+    border-radius: 8px;
+}
+
+.value-box {
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #00b4d8, #0077b6);
+    color: white !important;
+    box-shadow: 0 4px 14px rgba(0, 119, 182, 0.3);
+}
+
+.value-box:nth-child(2) {
+    background: linear-gradient(135deg, #2a9d8f, #1b6f63);
+}
+
+.value-box:nth-child(3) {
+    background: linear-gradient(135deg, #f4a261, #e76f51);
+}
+
+.value-box h6 {
+    margin-bottom: 0.2rem !important;
+    font-size: 0.8rem !important;
+    opacity: 0.9;
+}
+                  
+
+.value-box .value-box-value {
+    font-size: 1.3rem !important;
+    font-weight: 700;
+}
+
+.bslib-sidebar-layout.main{
+            padding: none !important;}
+
+.leaflet-container {
+    border-radius: 16px !important;
+}
+
+h4 {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #0f3057;
+}
+            
+h2{
+            font-weight: 700;}
+
+.control-label{
+    color: #d0d2d6 !important;
+    font-size: 1.0rem !important;
+}
+
+.main{
+    padding: 0px !important;
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y: hidden;
+    box-sizing: border-box;
+}
+                  
+.navset-card-pill{
+    border-radius: 0px !important;
+    background-color: red !important;
+}
+                  
+.tab-content{
+    height: 100%;
+        }
+
+span{
+    color: #8a8d93 !important;
+}
+            
+p {
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+}
+.input-select{
+    background-color: #ffffff !important;
+    border: 1px solid #ccd6dd !important;
+    color: #0f3057 !important;
+}
+
+hr {
+    border-top: 1px solid #ffff;
+    margin: 0px !important;
+}
+.sidebar hr {
+    color: #ffffff;
+    margin: 0px !important;
         
-        ui.layout_columns(
-            ui.value_box("Total Locations", ui.output_text("total_locations"), class_="_locations"),
-            ui.value_box("Free Programs (%)", ui.output_text("free_prop"), class_="_programs"),
-            ui.value_box("Accessibility (%)", ui.output_text("accessibility_prop"), class_="_accessibility"),
-            fill=False,
+}
+._locations{
+                  background-color: #20a8d8 !important;
+                  color: white !important;
+
+                  }
+._programs{
+                  background-color: #fec106 !important;
+                  color: white !important;
+                    }
+._accessibility{
+                    background-color: #f86c6b !important;
+                    color: white !important;
+                  }
+.card-body{
+                  background-color: transparent !important;}
+.bslib-grid{
+                  margin-top: 8px !important;}
+
+                  """), 
+
+ ui.layout_sidebar(
+
+    ui.sidebar(
+        ui.panel_title("Vancouver Food Programs"),
+        ui.hr(),
+        ui.input_select(
+            "meal_cost",
+            "Meal cost",
+            choices=meal_cost_choices,
+            selected="All"
         ),
-    ui.layout_columns(
-        ui.card(
-            ui.card_header("Location Map"),
-            output_widget("map"),
-            full_screen=True
+        ui.hr(),
+        ui.input_selectize(
+            "area",
+            "Local Area",
+            choices=area_choices,
+            multiple=True
         ),
-        ui.layout_columns(
-            ui.card(
-                ui.card_header("Program Details"),
-                ui.output_ui("selected_details"),
-                full_screen=True
+        ui.hr(),
+        ui.input_checkbox_group(
+            "features",
+            "Features",
+            choices=[
+                "Delivery Available",
+                "Provides Hampers",
+                "Takeout Available",
+                "Wheelchair Accessible",
+            ],
+        ),
+        open="desktop",
+    ),
+
+    ui.navset_card_pill(
+
+        ui.nav_panel(
+            "Dashboard",
+
+            ui.layout_columns(
+                ui.value_box(
+                    "Total Locations",
+                    ui.output_text("total_locations"),
+                    class_="_locations"
+                ),
+                ui.value_box(
+                    "Free Programs (%)",
+                    ui.output_text("free_prop"),
+                    class_="_programs"
+                ),
+                ui.value_box(
+                    "Accessibility (%)",
+                    ui.output_text("accessibility_prop"),
+                    class_="_accessibility"
+                ),
+                fill=False,
+                
             ),
-            ui.card(
-                ui.card_header("Contact Information"),
-                ui.output_ui("contact_info"),
-                full_screen=True
+
+            ui.layout_columns(
+
+                ui.card(
+                    ui.card_header("Location Map"),
+                    output_widget("map"),
+                    full_screen=True
+                ),
+
+                ui.layout_columns(
+
+                    ui.card(
+                        ui.card_header("Program Details"),
+                        ui.output_ui("selected_details"),
+                        full_screen=True
+                    ),
+
+                    ui.card(
+                        ui.card_header("Contact Information"),
+                        ui.output_ui("contact_info"),
+                        full_screen=True
+                    ),
+
+                    col_widths=[12],
+                ),
+
+                col_widths=[8, 4],
             ),
-            col_widths=[12]
         ),
-        col_widths=[8, 4]
-        )
-    )
+
+        ui.nav_panel(
+            "AI Explorer",
+
+            ui.layout_columns(
+                ui.value_box(
+                    "Total Locations",
+                    ui.output_text("ai_total_locations"),
+                    class_="_locations"
+                ),
+                ui.value_box(
+                    "Free Programs (%)",
+                    ui.output_text("ai_free_prop"),
+                    class_="_programs"
+                ),
+                fill=False,
+                height="100px",
+            ),
+
+            ui.layout_columns(
+
+                ui.card(
+                    qc.ui(),
+                    full_screen=True
+                ),
+
+                ui.layout_columns(
+
+                    ui.download_button(
+                        "downloadData",
+                        "Download"
+                    ),
+
+                    ui.card(
+                        ui.card_header("Filtered Data"),
+                        ui.output_data_frame("ai_data_table"),
+                    ),
+
+                    col_widths=[12],
+                ),
+
+                col_widths=[6, 6],
+            ),
+        ),
+
+        id="mainnavset",
+    ),
+),
 )
 
 def server(input, output, session):
+    qc_vals = qc.server() 
 
     selected_row = reactive.Value(None)
 
@@ -180,6 +490,42 @@ def server(input, output, session):
             ui.p(ui.strong("Email: "), email if pd.notna(email) else "Not available"),
             ui.p(ui.strong("Phone Number: "), phone if pd.notna(phone) else "Not available")
         )
+
+    @reactive.calc
+    def ai_df():
+        dff = qc_vals.df()
+        if dff is None:
+            return df.iloc[0:0]
+        return dff
+
+    @output
+    @render.data_frame
+    def ai_data_table():
+        return ai_df()
+
+    @output
+    @render.text
+    def ai_total_locations():
+        return str(len(ai_df()))
+
+    @output
+    @render.text
+    def ai_free_prop():
+        dff = ai_df()
+        if len(dff) == 0:
+            return "0%"
+        if "meal_cost" not in dff.columns:
+            return "0%"
+        return f"{(dff['meal_cost'].astype(str).str.lower() == 'free').mean():.1%}"
+    
+    @render.download(
+        filename="filtered_vancouver_food_programs.csv"
+    )
+    async def downloadData():
+        dff = ai_df()
+        yield dff.to_csv(index=False)
+
+
 
 app_dir = Path(__file__).parent
 app = App(app_ui, server, static_assets=app_dir / "www")
