@@ -11,7 +11,7 @@ df = pd.read_json(url)
 df = pd.json_normalize(df["results"])
 
 
-meal_cost_choices = ["All", "Not specified"] + sorted([str(x) for x in df["meal_cost"].dropna().unique()])
+meal_cost_choices = ["All"] + sorted([str(x) for x in df["meal_cost"].dropna().unique()])
 area_choices = sorted([str(x) for x in df["local_areas"].dropna().unique()])
 
 
@@ -38,36 +38,37 @@ app_ui = ui.page_fillable(
             ),
             open="desktop"
         ),
-        
+
         ui.layout_columns(
             ui.value_box("Total Locations", ui.output_text("total_locations"), class_="_locations"),
             ui.value_box("Free Programs (%)", ui.output_text("free_prop"), class_="_programs"),
             ui.value_box("Accessibility (%)", ui.output_text("accessibility_prop"), class_="_accessibility"),
             fill=False,
         ),
-    ui.layout_columns(
-        ui.card(
-            ui.card_header("Location Map"),
-            output_widget("map"),
-            full_screen=True
-        ),
         ui.layout_columns(
             ui.card(
-                ui.card_header("Program Details"),
-                ui.output_ui("selected_details"),
+                ui.card_header("Location Map"),
+                output_widget("map"),
                 full_screen=True
             ),
-            ui.card(
-                ui.card_header("Contact Information"),
-                ui.output_ui("contact_info"),
-                full_screen=True
+            ui.layout_columns(
+                ui.card(
+                    ui.card_header("Program Details"),
+                    ui.output_ui("selected_details"),
+                    full_screen=True
+                ),
+                ui.card(
+                    ui.card_header("Contact Information"),
+                    ui.output_ui("contact_info"),
+                    full_screen=True
+                ),
+                col_widths=[12]
             ),
-            col_widths=[12]
-        ),
-        col_widths=[8, 4]
+            col_widths=[8, 4]
         )
     )
 )
+
 
 def server(input, output, session):
 
@@ -75,17 +76,23 @@ def server(input, output, session):
 
     @reactive.calc
     def filtered_df():
-        dff = df.dropna(subset=["latitude", "longitude"])
+        dff = df.dropna(subset=["latitude", "longitude"]).copy()
 
-        if input.meal_cost() == "Not specified":
-            dff = dff[dff["meal_cost"].isna()]
-        elif input.meal_cost() != "All":
-            dff = dff[dff["meal_cost"] == input.meal_cost()]
+        if input.meal_cost() != "All":
+            dff = dff[dff["meal_cost"].astype(str) == input.meal_cost()]
 
-        if input.area():
-            dff = dff[dff["local_areas"].astype(str).isin(input.area())]
+        selected_areas_raw = input.area()
+        selected_areas = []
+        if selected_areas_raw is not None:
+            selected_areas = [str(x) for x in selected_areas_raw if str(x).strip() != ""]
 
-        features = input.features()
+        if len(selected_areas) > 0:
+            dff = dff[dff["local_areas"].astype(str).isin(selected_areas)]
+
+        features_raw = input.features()
+        features = []
+        if features_raw is not None:
+            features = [str(x) for x in features_raw if str(x).strip() != ""]
 
         if "Delivery Available" in features:
             dff = dff[dff["delivery_available"].astype(str) == "Yes"]
@@ -100,6 +107,11 @@ def server(input, output, session):
             dff = dff[dff["wheelchair_accessible"].astype(str) == "Yes"]
 
         return dff
+
+    @reactive.effect
+    def _clear_selected_row_on_filter_change():
+        filtered_df()
+        selected_row.set(None)
 
     @output
     @render.text
@@ -129,7 +141,6 @@ def server(input, output, session):
         dff = filtered_df()
         m = ipyleaflet.Map(center=(49.2827, -123.1207), zoom=12)
 
-        # Create markers list to avoid closure issues
         markers = []
         for _, row in dff.iterrows():
             marker = ipyleaflet.Marker(
@@ -138,13 +149,15 @@ def server(input, output, session):
                 draggable=False
             )
 
-            # Use lambda with immediate binding to avoid closure issues
-            marker.on_click(lambda event, r=row.to_dict(): selected_row.set(r))
+            def handle_click(event=None, row=row, **kwargs):
+                selected_row.set(row.to_dict())
+
+            marker.on_click(handle_click)
             markers.append(marker)
 
-        # Add all markers to map
-        for marker in markers:
-            m.add_layer(marker)
+        if len(markers) > 0:
+            cluster = ipyleaflet.MarkerCluster(markers=markers)
+            m.add_layer(cluster)
 
         return m
 
