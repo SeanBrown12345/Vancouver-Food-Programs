@@ -10,3 +10,6 @@ keplergl
 setuptools<81
 plotly
 ipyleaflet
+python-dotenv
+chatlas
+querychat
