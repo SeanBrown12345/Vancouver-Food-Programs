@@ -11,7 +11,7 @@ df = pd.read_json(url)
 df = pd.json_normalize(df["results"])
 
 
-meal_cost_choices = ["All"] + sorted([str(x) for x in df["meal_cost"].dropna().unique()])
+meal_cost_choices = ["All", "Not specified"] + sorted([str(x) for x in df["meal_cost"].dropna().unique()])
 area_choices = sorted([str(x) for x in df["local_areas"].dropna().unique()])
 
 
@@ -77,8 +77,10 @@ def server(input, output, session):
     def filtered_df():
         dff = df.dropna(subset=["latitude", "longitude"])
 
-        if input.meal_cost() != "All":
-            dff = dff[dff["meal_cost"].astype(str) == input.meal_cost()]
+        if input.meal_cost() == "Not specified":
+            dff = dff[dff["meal_cost"].isna()]
+        elif input.meal_cost() != "All":
+            dff = dff[dff["meal_cost"] == input.meal_cost()]
 
         if input.area():
             dff = dff[dff["local_areas"].astype(str).isin(input.area())]
@@ -127,6 +129,8 @@ def server(input, output, session):
         dff = filtered_df()
         m = ipyleaflet.Map(center=(49.2827, -123.1207), zoom=12)
 
+        # Create markers list to avoid closure issues
+        markers = []
         for _, row in dff.iterrows():
             marker = ipyleaflet.Marker(
                 location=(float(row["latitude"]), float(row["longitude"])),
@@ -134,10 +138,12 @@ def server(input, output, session):
                 draggable=False
             )
 
-            def handle_click(event=None, row=row, **kwargs):
-                selected_row.set(row.to_dict())
+            # Use lambda with immediate binding to avoid closure issues
+            marker.on_click(lambda event, r=row.to_dict(): selected_row.set(r))
+            markers.append(marker)
 
-            marker.on_click(handle_click)
+        # Add all markers to map
+        for marker in markers:
             m.add_layer(marker)
 
         return m
