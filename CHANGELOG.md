@@ -18,13 +18,19 @@
 - Working App: Functional prototype deployed; both URLs added to repo "About" section.
 - Release v0.2.0: Created on GitHub with release notes.
 
+## 0.3.0
+### Added 
+- A querychat AI chat interface
+- A dataframe output component to see the filtered dataframe
+- A data download button that downloads the querychat filtered dataframe
+
 ### Changed
-- Deviated from original app sketch by removing distribution charts and using those cards for row details instead.
-- Original summary statistics in sketch slightly modified to show proportions instead.
-- README and Demo: Updated README with embedded demo animation and deployed link.
+
 
 ### Fixed
-- Based on instructor feedback in #18, changed original single-select widgets to selectize widgets for the dropdowns
+- Based on instructor feedback in #39 to use the side menu bar so the app doesn't scroll, we found a way to fix the page overflow issue without neccessarily implementing the side bar menu.
+- We fixed the final URL in the about section based on instructors feedback.
+
 
 ### Known Issues
 - N/A
