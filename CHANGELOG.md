@@ -25,7 +25,8 @@
 - A data download button that downloads the querychat filtered dataframe
 
 ### Changed
-
+- Changed the filtering options for the foodprogramms based on cost. New options include: All, Free and Low Cost.
+- README and Requirements files: Updated README and requirements file with more packages.
 
 ### Fixed
 - Based on instructor feedback in #39 to use the side menu bar so the app doesn't scroll, we found a way to fix the page overflow issue without neccessarily implementing the side bar menu.
