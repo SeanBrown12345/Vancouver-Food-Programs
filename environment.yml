@@ -14,6 +14,10 @@ dependencies:
   - vl-convert-python=1.8.0
   - numpy=1.26.4
   - vegafusion=1.6.9
-  - shiny
   - shinywidgets
   - ipyleaflet
+  - pip
+  - pip:
+      - python-dotenv
+      - chatlas
+      - querychat
