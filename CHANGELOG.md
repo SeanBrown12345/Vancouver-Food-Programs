@@ -46,6 +46,11 @@ Originally, we were planning to have some histograms / bar charts on the right-h
 - Updated only the production URL in the git hub about section based on instructors feedback.
 
 ### Fixed
-- Based on instructor feedback in #39 to use the side menu bar so the app doesn't scroll, we found a way to fix the page overflow issue without neccessarily implementing the side bar menu.
+- Fixed the page overflow issue based on instructor feedback in #39
 - Fixed glitch with map location points not showing properly 
 
+### Reflection 
+
+Asides the JTBD for milestone 3, a few other fixes made were to incoporate instructor and TA's feedback.
+
+In response to instructor feedback to use the side menu bar so the app doesn't scroll, we found a way to fix the page overflow issue without neccessarily implementing the side bar menu.
