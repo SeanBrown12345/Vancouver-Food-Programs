@@ -3,8 +3,9 @@
 This project is a dashboard to help Vancouver residents experiencing food insecurity find free or low-cost food supports (e.g., meal programs and food hampers). Many programs exist, but information can be hard to search and compare. Our dashboard supports practical decision-making by letting users explore programs on a map and filter by service type, cost, and access requirements. We chose the City of Vancouver Food Programs dataset because it includes both program details and geospatial information needed for exploration.
 
 ## Deployment Links: 
-[Stable Version](https://019c9c40-a7bf-b588-73bc-bddb7328a53a.share.connect.posit.cloud)
-[Development](https://019ca585-e08b-d72c-7386-d8b5735f4c67.share.connect.posit.cloud)
+- [Stable Version URL](https://019c9c40-a7bf-b588-73bc-bddb7328a53a.share.connect.posit.cloud)
+
+- [Development URL](https://019ca585-e08b-d72c-7386-d8b5735f4c67.share.connect.posit.cloud)
 
 ## Demonstration
 
