@@ -9,7 +9,12 @@ html, body {
     background-attachment: fixed;
     background-repeat: no-repeat;
     padding: 0px !important;
+    height: 100%;
+    overflow: hidden !important;
 }
+                  
+#mainnavset{
+                  margin-left: 6px !important;}
 
 .collapse-toggle[aria-expanded="true"] .collapse-icon {
     fill: white !important;
@@ -17,6 +22,17 @@ html, body {
 
 .collapse-toggle[aria-expanded="false"] .collapse-icon {
     fill: black !important;
+}
+
+.navbar {
+    background-color: #0f3057 !important;
+    color: white !important;
+    padding: 0.75rem 1.25rem !important;
+    font-size: 1.2rem !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 0 0 16px 16px;
+    margin-bottom: 1rem;
 }
 
 .panel_title {
@@ -109,6 +125,7 @@ html, body {
     font-size: 0.8rem !important;
     opacity: 0.9;
 }
+                  
 
 .value-box .value-box-value {
     font-size: 1.3rem !important;
@@ -137,6 +154,23 @@ h2{
     font-size: 1.0rem !important;
 }
 
+.main{
+    padding: 0px !important;
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y: hidden;
+    box-sizing: border-box;
+}
+                  
+.navset-card-pill{
+    border-radius: 0px !important;
+    background-color: red !important;
+}
+                  
+.tab-content{
+    height: 100%;
+        }
+
 span{
     color: #8a8d93 !important;
 }
@@ -163,6 +197,7 @@ hr {
 ._locations{
                   background-color: #20a8d8 !important;
                   color: white !important;
+
                   }
 ._programs{
                   background-color: #fec106 !important;
@@ -172,4 +207,7 @@ hr {
                     background-color: #f86c6b !important;
                     color: white !important;
                   }
-    
+.card-body{
+                  background-color: transparent !important;}
+.bslib-grid{
+                  margin-top: 8px !important;}
