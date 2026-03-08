@@ -379,6 +379,7 @@ hr {
 ),
 )
 
+
 def server(input, output, session):
     qc_vals = qc.server() 
 
@@ -386,7 +387,7 @@ def server(input, output, session):
 
     @reactive.calc
     def filtered_df():
-        dff = df.dropna(subset=["latitude", "longitude"])
+        dff = df.dropna(subset=["latitude", "longitude"]).copy()
 
         if input.meal_cost() != "All":
             if input.meal_cost() == "Free":
@@ -397,10 +398,18 @@ def server(input, output, session):
                     dff["meal_cost"].astype(str).str.startswith("$")
                 ]
 
-        if input.area():
-            dff = dff[dff["local_areas"].astype(str).isin(input.area())]
+        selected_areas_raw = input.area()
+        selected_areas = []
+        if selected_areas_raw is not None:
+            selected_areas = [str(x) for x in selected_areas_raw if str(x).strip() != ""]
 
-        features = input.features()
+        if len(selected_areas) > 0:
+            dff = dff[dff["local_areas"].astype(str).isin(selected_areas)]
+
+        features_raw = input.features()
+        features = []
+        if features_raw is not None:
+            features = [str(x) for x in features_raw if str(x).strip() != ""]
 
         if "Delivery Available" in features:
             dff = dff[dff["delivery_available"].astype(str) == "Yes"]
@@ -415,6 +424,11 @@ def server(input, output, session):
             dff = dff[dff["wheelchair_accessible"].astype(str) == "Yes"]
 
         return dff
+
+    @reactive.effect
+    def _clear_selected_row_on_filter_change():
+        filtered_df()
+        selected_row.set(None)
 
     @output
     @render.text
@@ -444,6 +458,7 @@ def server(input, output, session):
         dff = filtered_df()
         m = ipyleaflet.Map(center=(49.2827, -123.1207), zoom=12)
 
+        markers = []
         for _, row in dff.iterrows():
             marker = ipyleaflet.Marker(
                 location=(float(row["latitude"]), float(row["longitude"])),
@@ -455,7 +470,11 @@ def server(input, output, session):
                 selected_row.set(row.to_dict())
 
             marker.on_click(handle_click)
-            m.add_layer(marker)
+            markers.append(marker)
+
+        if len(markers) > 0:
+            cluster = ipyleaflet.MarkerCluster(markers=markers)
+            m.add_layer(cluster)
 
         return m
 
