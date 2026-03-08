@@ -39,6 +39,7 @@ Originally, we were planning to have some histograms / bar charts on the right-h
 - A querychat AI chat interface
 - A dataframe output component to see the filtered dataframe
 - A data download button that downloads the querychat filtered dataframe
+- Release v0.3.0 was created on GitHub with release notes.
 
 ### Changed
 - Changed the meal cost filtering options for the food programs from $2, $4, $9.95, Free and Low cost to All, Free and Low Cost. 
@@ -51,6 +52,6 @@ Originally, we were planning to have some histograms / bar charts on the right-h
 
 ### Reflection 
 
-Asides the JTBD for milestone 3, a few other fixes made were to incoporate instructor and TA's feedback.
+Asides the Jobs To Be Done(JBTD) for milestone 3, a few other fixes made were to incoporate instructor and TA's feedback.
 
 In response to instructor feedback to use the side menu bar so the app doesn't scroll, we found a way to fix the page overflow issue without neccessarily implementing the side bar menu.
