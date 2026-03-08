@@ -48,10 +48,16 @@ Originally, we were planning to have some histograms / bar charts on the right-h
 
 ### Fixed
 - Fixed the page overflow issue based on instructor feedback in #39
-- Fixed glitch with map location points not showing properly 
+- Fixed filter options for meal cost based on instructor feedback in #39
+
+### Known Issues
+- Map pins seems to disappear when selecting and deselecting filters. We attempted a fix on this issue but it only ended up making the problem worse.
+
 
 ### Reflection 
 
 Asides the Jobs To Be Done(JBTD) for milestone 3, a few other fixes made were to incoporate instructor and TA's feedback.
 
 In response to instructor feedback to use the side menu bar so the app doesn't scroll, we found a way to fix the page overflow issue without neccessarily implementing the side bar menu.
+
+In response to instructor feedback regarding fixing the map pins, due to time constraints we were unable to resolve the issue. However, we will continue working on fixing it for the next milestone.
