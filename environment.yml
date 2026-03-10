@@ -16,6 +16,9 @@ dependencies:
   - vegafusion=1.6.9
   - shinywidgets
   - ipyleaflet
+  - pyarrow
+  - duckdb
+  - ibis-framework
   - pip
   - pip:
       - python-dotenv
