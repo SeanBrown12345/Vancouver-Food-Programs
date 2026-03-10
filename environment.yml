@@ -17,6 +17,7 @@ dependencies:
   - shinywidgets
   - ipyleaflet
   - pyarrow
+  - plotly
   - duckdb
   - ibis-framework
   - pip
