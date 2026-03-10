@@ -27,18 +27,18 @@ if not PARQUET_PATH.exists():
 else:
     print(f"Parquet file already exists at {PARQUET_PATH}")
 
-# ── 2. Connect to parquet via ibis + DuckDB───────────────────────────────────
+# Connect to parquet via ibis + DuckDB
 con = ibis.duckdb.connect()
 table = con.read_parquet(str(PARQUET_PATH))
 
-# ── 3. Build UI choices from ibis────────────────────────────────────────────
+# Build UI choices from ibis
 meal_cost_choices = ["All", "Free", "Low-cost"]
 area_choices = sorted([
     str(x) for x in
     table.select("local_areas").distinct().execute()["local_areas"].dropna()
 ])
 
-# Provide full df to querychat 
+# Provide full df to querychat
 df = table.execute()
 qc = QueryChat(df, "food_programs", client="openai/gpt-4.1")
 
