@@ -5,7 +5,7 @@ from shinywidgets import output_widget, render_widget
 import pandas as pd
 import ibis
 import ipyleaflet
-import plotly.express as px
+# import plotly.express as px
 
 from dotenv import load_dotenv
 from querychat import QueryChat
@@ -399,7 +399,7 @@ hr {
 )
 
 def server(input, output, session):
-    qc_vals = qc.server() 
+    # qc_vals = qc.server() 
 
     selected_row = reactive.Value(None)
 
@@ -435,7 +435,7 @@ def server(input, output, session):
         if "Wheelchair Accessible" in features:
             t = t.filter(t.wheelchair_accessible == "Yes")
 
-        return t.execute()  # ← DuckDB runs ALL filters here
+        return t.execute()  # DuckDB runs ALL filters here
 
     @output
     @render.text
@@ -552,8 +552,6 @@ def server(input, output, session):
     async def downloadData():
         dff = ai_df()
         yield dff.to_csv(index=False)
-
-
 
 app_dir = Path(__file__).parent
 app = App(app_ui, server, static_assets=app_dir / "www")
