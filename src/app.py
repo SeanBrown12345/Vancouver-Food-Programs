@@ -1,26 +1,45 @@
-from anyio import Path
+from pathlib import Path  # changed from anyio to pathlib
 
 from shiny import App, ui, render, reactive
 from shinywidgets import output_widget, render_widget
 import pandas as pd
+import ibis
 import ipyleaflet
 import plotly.express as px
 
-from chatlas import ChatGithub
 from dotenv import load_dotenv
 from querychat import QueryChat
 
+# Load in .env file
 load_dotenv()
 
-url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/free-and-low-cost-food-programs/records?limit=100"
-df = pd.read_json(url)
-df = pd.json_normalize(df["results"])
+# ── 1. Convert to parquet (runs once at startup)──────────────────────────────
+PARQUET_PATH = Path("data/processed/food_programs.parquet")
 
+# Checks if parquet files exist, and if not create folder
+if not PARQUET_PATH.exists():
+    PARQUET_PATH.parent.mkdir(parents=True, exist_ok=True)
+    url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/free-and-low-cost-food-programs/records?limit=100"
+    raw = pd.read_json(url)
+    df_init = pd.json_normalize(raw["results"])
+    df_init.to_parquet(PARQUET_PATH, index=False)
+    print(f"Parquet file created at {PARQUET_PATH}")
+else:
+    print(f"Parquet file already exists at {PARQUET_PATH}")
 
+# ── 2. Connect to parquet via ibis + DuckDB───────────────────────────────────
+con = ibis.duckdb.connect()
+table = con.read_parquet(str(PARQUET_PATH))
+
+# ── 3. Build UI choices from ibis────────────────────────────────────────────
 meal_cost_choices = ["All", "Free", "Low-cost"]
-area_choices = sorted([str(x) for x in df["local_areas"].dropna().unique()])
+area_choices = sorted([
+    str(x) for x in
+    table.select("local_areas").distinct().execute()["local_areas"].dropna()
+])
 
-
+# Provide full df to querychat 
+df = table.execute()
 qc = QueryChat(df, "food_programs", client="openai/gpt-4.1")
 
 
