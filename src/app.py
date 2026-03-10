@@ -405,35 +405,37 @@ def server(input, output, session):
 
     @reactive.calc
     def filtered_df():
-        dff = df.dropna(subset=["latitude", "longitude"])
+        t = table
 
+        # Always drop rows missing coordinates
+        t = t.filter(t.latitude.notnull() & t.longitude.notnull())
+
+        # Meal cost filter
         if input.meal_cost() != "All":
             if input.meal_cost() == "Free":
-                dff = dff[dff["meal_cost"].astype(str).str.lower() == "free"]
+                t = t.filter(t.meal_cost.lower() == "free")
             else:  # Low-cost
-                dff = dff[
-                    dff["meal_cost"].astype(str).str.lower().str.contains("low cost") |
-                    dff["meal_cost"].astype(str).str.startswith("$")
-                ]
+                t = t.filter(
+                    t.meal_cost.lower().contains("low cost") |
+                    t.meal_cost.lower().startswith("$")
+                )
 
+        # Area filter
         if input.area():
-            dff = dff[dff["local_areas"].astype(str).isin(input.area())]
+            t = t.filter(t.local_areas.isin(list(input.area())))
 
+        # Feature filters
         features = input.features()
-
         if "Delivery Available" in features:
-            dff = dff[dff["delivery_available"].astype(str) == "Yes"]
-
+            t = t.filter(t.delivery_available == "Yes")
         if "Provides Hampers" in features:
-            dff = dff[dff["provides_hampers"].astype(str) == "True"]
-
+            t = t.filter(t.provides_hampers == "True")
         if "Takeout Available" in features:
-            dff = dff[dff["takeout_available"].astype(str) == "Yes"]
-
+            t = t.filter(t.takeout_available == "Yes")
         if "Wheelchair Accessible" in features:
-            dff = dff[dff["wheelchair_accessible"].astype(str) == "Yes"]
+            t = t.filter(t.wheelchair_accessible == "Yes")
 
-        return dff
+        return t.execute()  # ← DuckDB runs ALL filters here
 
     @output
     @render.text
