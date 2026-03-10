@@ -13,7 +13,7 @@ from querychat import QueryChat
 # Load in .env file
 load_dotenv()
 
-# ── 1. Convert to parquet (runs once at startup)──────────────────────────────
+# Convert to parquet (runs once at startup)
 PARQUET_PATH = Path("data/processed/food_programs.parquet")
 
 # Checks if parquet files exist, and if not create folder
@@ -399,7 +399,7 @@ hr {
 )
 
 def server(input, output, session):
-    # qc_vals = qc.server() 
+    qc_vals = qc.server() 
 
     selected_row = reactive.Value(None)
 
