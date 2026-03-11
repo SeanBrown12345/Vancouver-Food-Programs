@@ -45,7 +45,13 @@ Follow these steps to run the dashboard locally on your machine:
 
 ## Testing
 
-With the environment activated, run the following command to execute the tests:
+With the environment activated, install the Playwright browser dependencies:
+
+```bash
+playwright install
+```
+
+Then, run the following command to execute the tests:
 
 ```bash
 python -m pytest
