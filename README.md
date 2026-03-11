@@ -45,7 +45,7 @@ Follow these steps to run the dashboard locally on your machine:
 
 ## Testing
 
-With the environment activated, install the Playwright browser dependencies:
+Setup: With the environment activated, install the Playwright browser dependencies
 
 ```bash
 playwright install
