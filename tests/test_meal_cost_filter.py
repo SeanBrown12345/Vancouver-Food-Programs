@@ -1,5 +1,7 @@
 import pandas as pd
-from app import filter_by_meal_cost
+from src.app import filter_by_meal_cost
+
+
 
 url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/free-and-low-cost-food-programs/records?limit=100"
 df = pd.read_json(url)
