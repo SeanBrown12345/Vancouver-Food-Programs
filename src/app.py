@@ -24,6 +24,24 @@ area_choices = sorted([str(x) for x in df["local_areas"].dropna().unique()])
 qc = QueryChat(df, "food_programs", client="openai/gpt-4.1")
 
 
+# Refactor the meal cost filtering logic into a separate function 
+def filter_by_meal_cost(df, meal_cost):
+    """ 
+    Filters the dataframe by meal cost.
+
+    """
+    if meal_cost == "All":
+        return df
+
+    if meal_cost == "Free":
+        return df[df["meal_cost"].astype(str).str.lower() == "free"]
+
+    if meal_cost == "Low-cost":
+        return df[
+            df["meal_cost"].astype(str).str.lower().str.contains("low cost") |
+            df["meal_cost"].astype(str).str.startswith("$")
+        ]
+
 app_ui = ui.page_fillable(
 #    ui.tags.link(href="styles.css", rel="stylesheet"),
 
@@ -388,14 +406,7 @@ def server(input, output, session):
     def filtered_df():
         dff = df.dropna(subset=["latitude", "longitude"])
 
-        if input.meal_cost() != "All":
-            if input.meal_cost() == "Free":
-                dff = dff[dff["meal_cost"].astype(str).str.lower() == "free"]
-            else:  # Low-cost
-                dff = dff[
-                    dff["meal_cost"].astype(str).str.lower().str.contains("low cost") |
-                    dff["meal_cost"].astype(str).str.startswith("$")
-                ]
+        dff = filter_by_meal_cost(dff, input.meal_cost())
 
         if input.area():
             dff = dff[dff["local_areas"].astype(str).isin(input.area())]
