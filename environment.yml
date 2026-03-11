@@ -21,3 +21,5 @@ dependencies:
       - python-dotenv
       - chatlas
       - querychat
+      - pytest-playwright
+      - playwright
