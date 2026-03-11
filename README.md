@@ -42,3 +42,11 @@ Follow these steps to run the dashboard locally on your machine:
    shiny run --reload src/app.py
    ```
 6. Open your web browser and navigate [here](http://localhost:8000) to view the dashboard.
+
+## Testing
+
+With the environment activated, run the following command to execute the tests:
+
+```bash
+python -m pytest
+```
