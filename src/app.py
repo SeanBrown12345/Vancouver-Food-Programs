@@ -5,7 +5,6 @@ from shinywidgets import output_widget, render_widget
 import pandas as pd
 import ibis
 import ipyleaflet
-# import plotly.express as px
 
 from dotenv import load_dotenv
 from querychat import QueryChat
@@ -41,7 +40,6 @@ area_choices = sorted([
 # Provide full df to querychat
 df = table.execute()
 qc = QueryChat(df, "food_programs", client="openai/gpt-4.1")
-
 
 app_ui = ui.page_fillable(
 #    ui.tags.link(href="styles.css", rel="stylesheet"),
