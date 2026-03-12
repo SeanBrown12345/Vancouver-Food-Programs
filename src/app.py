@@ -30,6 +30,18 @@ else:
 con = ibis.duckdb.connect()
 table = con.read_parquet(str(PARQUET_PATH))
 
+
+def filter_by_meal_cost(t, meal_cost):
+    if meal_cost == "All":
+        return t
+    if meal_cost == "Free":
+        return t.filter(t.meal_cost.lower() == "free")
+    if meal_cost == "Low-cost":
+        return t.filter(
+            t.meal_cost.lower().contains("low cost") |
+            t.meal_cost.lower().startswith("$")
+        )
+    
 # Build UI choices from ibis
 meal_cost_choices = ["All", "Free", "Low-cost"]
 area_choices = sorted([
@@ -404,25 +416,10 @@ def server(input, output, session):
     @reactive.calc
     def filtered_df():
         t = table
-
-        # Always drop rows missing coordinates
         t = t.filter(t.latitude.notnull() & t.longitude.notnull())
-
-        # Meal cost filter
-        if input.meal_cost() != "All":
-            if input.meal_cost() == "Free":
-                t = t.filter(t.meal_cost.lower() == "free")
-            else:  # Low-cost
-                t = t.filter(
-                    t.meal_cost.lower().contains("low cost") |
-                    t.meal_cost.lower().startswith("$")
-                )
-
-        # Area filter
+        t = filter_by_meal_cost(t, input.meal_cost())
         if input.area():
             t = t.filter(t.local_areas.isin(list(input.area())))
-
-        # Feature filters
         features = input.features()
         if "Delivery Available" in features:
             t = t.filter(t.delivery_available == "Yes")
@@ -432,8 +429,7 @@ def server(input, output, session):
             t = t.filter(t.takeout_available == "Yes")
         if "Wheelchair Accessible" in features:
             t = t.filter(t.wheelchair_accessible == "Yes")
-
-        return t.execute()  # DuckDB runs ALL filters here
+        return t.execute()
 
     @output
     @render.text
