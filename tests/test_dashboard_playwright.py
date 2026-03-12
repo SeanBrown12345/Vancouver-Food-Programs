@@ -33,3 +33,13 @@ def test_feature_checkbox_hampers(page, local_app):
     """
     Verify that checking "Provides Hampers" checkbox filters results.
     """
+    page.goto(local_app.url)
+    
+    hampers_checkbox = page.locator('input[value="Provides Hampers"]')
+    assert hampers_checkbox.is_visible()
+    
+    hampers_checkbox.check()
+    page.wait_for_timeout(1000)
+    
+    program_cards = page.locator('[data-testid="program-card"]')
+    assert program_cards.count() > 0
