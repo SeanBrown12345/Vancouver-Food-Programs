@@ -13,3 +13,6 @@ ipyleaflet
 python-dotenv
 chatlas
 querychat
+pyarrow
+duckdb
+ibis-framework[duckdb]

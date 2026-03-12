@@ -1,46 +1,57 @@
-from anyio import Path
+from pathlib import Path  # changed from anyio to pathlib
 
 from shiny import App, ui, render, reactive
 from shinywidgets import output_widget, render_widget
 import pandas as pd
+import ibis
 import ipyleaflet
-import plotly.express as px
 
-from chatlas import ChatGithub
 from dotenv import load_dotenv
 from querychat import QueryChat
 
+# Load in .env file
 load_dotenv()
 
-url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/free-and-low-cost-food-programs/records?limit=100"
-df = pd.read_json(url)
-df = pd.json_normalize(df["results"])
+# Convert to parquet (runs once at startup)
+PARQUET_PATH = Path("data/processed/food_programs.parquet")
+
+# Checks if parquet files exist, and if not create folder
+if not PARQUET_PATH.exists():
+    PARQUET_PATH.parent.mkdir(parents=True, exist_ok=True)
+    url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/free-and-low-cost-food-programs/records?limit=100"
+    raw = pd.read_json(url)
+    df_init = pd.json_normalize(raw["results"])
+    df_init.to_parquet(PARQUET_PATH, index=False)
+    print(f"Parquet file created at {PARQUET_PATH}")
+else:
+    print(f"Parquet file already exists at {PARQUET_PATH}")
+
+# Connect to parquet via ibis + DuckDB
+con = ibis.duckdb.connect()
+table = con.read_parquet(str(PARQUET_PATH))
 
 
-meal_cost_choices = ["All", "Free", "Low-cost"]
-area_choices = sorted([str(x) for x in df["local_areas"].dropna().unique()])
-
-
-qc = QueryChat(df, "food_programs", client="openai/gpt-4.1")
-
-
-# Refactor the meal cost filtering logic into a separate function 
-def filter_by_meal_cost(df, meal_cost):
-    """ 
-    Filters the dataframe by meal cost.
-
-    """
+def filter_by_meal_cost(t, meal_cost):
     if meal_cost == "All":
-        return df
-
+        return t
     if meal_cost == "Free":
-        return df[df["meal_cost"].astype(str).str.lower() == "free"]
-
+        return t.filter(t.meal_cost.lower() == "free")
     if meal_cost == "Low-cost":
-        return df[
-            df["meal_cost"].astype(str).str.lower().str.contains("low cost") |
-            df["meal_cost"].astype(str).str.startswith("$")
-        ]
+        return t.filter(
+            t.meal_cost.lower().contains("low cost") |
+            t.meal_cost.lower().startswith("$")
+        )
+    
+# Build UI choices from ibis
+meal_cost_choices = ["All", "Free", "Low-cost"]
+area_choices = sorted([
+    str(x) for x in
+    table.select("local_areas").distinct().execute()["local_areas"].dropna()
+])
+
+# Provide full df to querychat
+df = table.execute()
+qc = QueryChat(df, "food_programs", client="openai/gpt-4.1")
 
 app_ui = ui.page_fillable(
 #    ui.tags.link(href="styles.css", rel="stylesheet"),
@@ -398,34 +409,27 @@ hr {
 )
 
 def server(input, output, session):
-    qc_vals = qc.server() 
+    # qc_vals = qc.server() 
 
     selected_row = reactive.Value(None)
 
     @reactive.calc
     def filtered_df():
-        dff = df.dropna(subset=["latitude", "longitude"])
-
-        dff = filter_by_meal_cost(dff, input.meal_cost())
-
+        t = table
+        t = t.filter(t.latitude.notnull() & t.longitude.notnull())
+        t = filter_by_meal_cost(t, input.meal_cost())
         if input.area():
-            dff = dff[dff["local_areas"].astype(str).isin(input.area())]
-
+            t = t.filter(t.local_areas.isin(list(input.area())))
         features = input.features()
-
         if "Delivery Available" in features:
-            dff = dff[dff["delivery_available"].astype(str) == "Yes"]
-
+            t = t.filter(t.delivery_available == "Yes")
         if "Provides Hampers" in features:
-            dff = dff[dff["provides_hampers"].astype(str) == "True"]
-
+            t = t.filter(t.provides_hampers == "True")
         if "Takeout Available" in features:
-            dff = dff[dff["takeout_available"].astype(str) == "Yes"]
-
+            t = t.filter(t.takeout_available == "Yes")
         if "Wheelchair Accessible" in features:
-            dff = dff[dff["wheelchair_accessible"].astype(str) == "Yes"]
-
-        return dff
+            t = t.filter(t.wheelchair_accessible == "Yes")
+        return t.execute()
 
     @output
     @render.text
@@ -542,8 +546,6 @@ def server(input, output, session):
     async def downloadData():
         dff = ai_df()
         yield dff.to_csv(index=False)
-
-
 
 app_dir = Path(__file__).parent
 app = App(app_ui, server, static_assets=app_dir / "www")
