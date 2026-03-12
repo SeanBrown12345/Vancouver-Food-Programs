@@ -48,5 +48,15 @@ def test_feature_checkbox_takeout(page, local_app):
     """
     Verify that checking "Takeout Available" checkbox filters results.
     """
+    page.goto(local_app.url)
+    
+    takeout_checkbox = page.locator('input[value="Takeout Available"]')
+    assert takeout_checkbox.is_visible()
+    
+    takeout_checkbox.check()
+    page.wait_for_timeout(1000)
+    
+    program_cards = page.locator('[data-testid="program-card"]')
+    assert program_cards.count() > 0
 
 
