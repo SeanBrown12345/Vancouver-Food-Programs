@@ -409,7 +409,7 @@ hr {
 )
 
 def server(input, output, session):
-    qc_vals = qc.server() 
+    # qc_vals = qc.server() 
 
     selected_row = reactive.Value(None)
 
