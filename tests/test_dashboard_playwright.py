@@ -43,3 +43,10 @@ def test_feature_checkbox_hampers(page, local_app):
     
     program_cards = page.locator('[data-testid="program-card"]')
     assert program_cards.count() > 0
+
+def test_feature_checkbox_takeout(page, local_app):
+    """
+    Verify that checking "Takeout Available" checkbox filters results.
+    """
+
+
