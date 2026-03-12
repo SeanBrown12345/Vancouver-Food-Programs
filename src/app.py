@@ -386,13 +386,14 @@ hr {
 
                 ui.layout_columns(
 
-                    ui.download_button(
-                        "downloadData",
-                        "Download"
-                    ),
+
 
                     ui.card(
                         ui.card_header("Filtered Data"),
+                        ui.download_button(
+                            "downloadData",
+                            "Download"
+                        ),
                         ui.output_data_frame("ai_data_table"),
                     ),
 
