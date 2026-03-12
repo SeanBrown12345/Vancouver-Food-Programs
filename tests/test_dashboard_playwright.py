@@ -63,6 +63,16 @@ def test_feature_checkbox_wheelchair(page, local_app):
     """
     Verify that checking "Wheelchair Accessible" checkbox filters results.
     """
+    page.goto(local_app.url)
+    
+    wheelchair_checkbox = page.locator('input[value="Wheelchair Accessible"]')
+    assert wheelchair_checkbox.is_visible()
+    
+    wheelchair_checkbox.check()
+    page.wait_for_timeout(1000)
+    
+    program_cards = page.locator('[data-testid="program-card"]')
+    assert program_cards.count() > 0
 
 
 
