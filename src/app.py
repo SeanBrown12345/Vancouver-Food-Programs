@@ -1,13 +1,14 @@
-from pathlib import Path  # changed from anyio to pathlib
+from pathlib import Path
 
 from shiny import App, ui, render, reactive
 from shinywidgets import output_widget, render_widget
 import pandas as pd
 import ibis
-import ipyleaflet
+import plotly.express as px
+import plotly.graph_objects as go
 
 from dotenv import load_dotenv
-from querychat import QueryChat
+from querychat import QueryChat    
 
 # Load in .env file
 load_dotenv()
@@ -456,24 +457,52 @@ def server(input, output, session):
     @output
     @render_widget
     def map():
-        dff = filtered_df()
-        m = ipyleaflet.Map(center=(49.2827, -123.1207), zoom=12)
+        dff = filtered_df().reset_index(drop=True).copy()
 
-        for _, row in dff.iterrows():
-            marker = ipyleaflet.Marker(
-                location=(float(row["latitude"]), float(row["longitude"])),
-                title=str(row.get("program_name", "")),
-                draggable=False
+        if len(dff) == 0:
+            fig = go.FigureWidget()
+            fig.update_layout(
+                mapbox_style="open-street-map",
+                mapbox_center={"lat": 49.25, "lon": -123.1207},
+                margin=dict(l=0, r=0, t=0, b=0),
+                height=600
             )
+            return fig
 
-            def handle_click(event=None, row=row, **kwargs):
-                selected_row.set(row.to_dict())
+        fig = px.scatter_mapbox(
+            dff,
+            lat="latitude",
+            lon="longitude",
+            hover_name="organization_name",
+            hover_data={
+            "organization_name": False,
+            "meal_cost": False,
+            "latitude": False,
+            "longitude": False
+            },
+            zoom=11
+        )
+        fig.update_layout(
+            mapbox_style="open-street-map",
+            mapbox_center={"lat": 49.25, "lon": -123.1207},
+            margin=dict(l=0, r=0, t=0, b=0),
+            height=600
+        )
 
-            marker.on_click(handle_click)
-            m.add_layer(marker)
+        fig = go.FigureWidget(fig)
 
-        return m
+        def handle_click(trace, points, state):
+            if not points.point_inds:
+                return
+            idx = points.point_inds[0]
+            row = dff.iloc[idx].to_dict()
+            selected_row.set(row)
+        
+        for trace in fig.data:
+            trace.on_click(handle_click)
 
+        return fig
+    
     @output
     @render.ui
     def selected_details():
