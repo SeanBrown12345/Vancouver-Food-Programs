@@ -387,13 +387,14 @@ hr {
 
                 ui.layout_columns(
 
-                    ui.download_button(
-                        "downloadData",
-                        "Download"
-                    ),
+
 
                     ui.card(
                         ui.card_header("Filtered Data"),
+                        ui.download_button(
+                            "downloadData",
+                            "Download"
+                        ),
                         ui.output_data_frame("ai_data_table"),
                     ),
 
@@ -432,12 +433,10 @@ def server(input, output, session):
             t = t.filter(t.wheelchair_accessible == "Yes")
         return t.execute()
 
-    @output
     @render.text
     def total_locations():
         return str(len(filtered_df()))
 
-    @output
     @render.text
     def free_prop():
         dff = filtered_df()
@@ -445,7 +444,6 @@ def server(input, output, session):
             return "0%"
         return f"{(dff['meal_cost'].astype(str).str.lower() == 'free').mean():.1%}"
 
-    @output
     @render.text
     def accessibility_prop():
         dff = filtered_df()
@@ -454,7 +452,6 @@ def server(input, output, session):
         accessible = dff["wheelchair_accessible"].astype(str).str.lower() == "yes"
         return f"{accessible.mean():.1%}"
 
-    @output
     @render_widget
     def map():
         dff = filtered_df().reset_index(drop=True).copy()
@@ -526,7 +523,6 @@ def server(input, output, session):
             ui.p(ui.strong("Wheelchair Accessible: "), row.get("wheelchair_accessible", ""))
         )
 
-    @output
     @render.ui
     def contact_info():
         row = selected_row.get()
@@ -549,17 +545,14 @@ def server(input, output, session):
             return df.iloc[0:0]
         return dff
 
-    @output
     @render.data_frame
     def ai_data_table():
         return ai_df()
 
-    @output
     @render.text
     def ai_total_locations():
         return str(len(ai_df()))
 
-    @output
     @render.text
     def ai_free_prop():
         dff = ai_df()
