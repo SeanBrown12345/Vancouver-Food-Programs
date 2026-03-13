@@ -14,7 +14,6 @@ def test_meal_cost_filter_options(page, local_app):
     assert options == ["All", "Free", "Low-cost"]
 
 
-
 def test_feature_checkbox_delivery(page, local_app):
     """
     Verify that checking "Delivery Available" filters results.
