@@ -14,3 +14,88 @@ def test_meal_cost_filter_options(page, local_app):
     assert options == ["All", "Free", "Low-cost"]
 
 
+def test_feature_checkbox_delivery(page, local_app):
+    """
+    Verify that checking "Delivery Available" filters results.
+    """
+    page.goto(local_app.url)
+    
+    # Wait for at least one marker to appear before counting
+    page.wait_for_selector(".leaflet-marker-icon", timeout=10000)
+
+    before = page.locator(".leaflet-marker-icon").count()
+
+    delivery_checkbox = page.locator('input[value="Delivery Available"]')
+    delivery_checkbox.check()
+
+    page.wait_for_timeout(1000)
+
+    after = page.locator(".leaflet-marker-icon").count()
+
+    assert after <= before
+
+
+def test_feature_checkbox_hampers(page, local_app):
+    """
+    Verify that checking "Provides Hampers" checkbox filters results.
+    """
+    page.goto(local_app.url)
+    
+    # Wait for at least one marker to appear before counting
+    page.wait_for_selector(".leaflet-marker-icon", timeout=10000)
+
+    before = page.locator(".leaflet-marker-icon").count()
+
+    hampers_checkbox = page.locator('input[value="Provides Hampers"]')
+    hampers_checkbox.check()
+
+    page.wait_for_timeout(1000)
+
+    after = page.locator(".leaflet-marker-icon").count()
+
+    assert after <= before
+
+def test_feature_checkbox_takeout(page, local_app):
+    """
+    Verify that checking "Takeout Available" checkbox filters results.
+    """
+    page.goto(local_app.url)
+    
+    # Wait for at least one marker to appear before counting
+    page.wait_for_selector(".leaflet-marker-icon", timeout=10000)
+
+    before = page.locator(".leaflet-marker-icon").count()
+
+    takeout_checkbox = page.locator('input[value="Takeout Available"]')
+    takeout_checkbox.check()
+
+    page.wait_for_timeout(1000)
+
+    after = page.locator(".leaflet-marker-icon").count()
+
+    assert after <= before
+
+def test_feature_checkbox_wheelchair(page, local_app):
+    """
+    Verify that checking "Wheelchair Accessible" checkbox filters results.
+    """
+    page.goto(local_app.url)
+    
+    # Wait for at least one marker to appear before counting
+    page.wait_for_selector(".leaflet-marker-icon", timeout=10000)
+
+    before = page.locator(".leaflet-marker-icon").count()
+
+    wheelchair_checkbox = page.locator('input[value="Wheelchair Accessible"]')
+    wheelchair_checkbox.check()
+
+    page.wait_for_timeout(1000)
+
+    after = page.locator(".leaflet-marker-icon").count()
+
+    assert after <= before
+
+
+
+
+
