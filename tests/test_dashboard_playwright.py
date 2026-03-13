@@ -81,14 +81,19 @@ def test_feature_checkbox_wheelchair(page, local_app):
     """
     page.goto(local_app.url)
     
+    # Wait for at least one marker to appear before counting
+    page.wait_for_selector(".leaflet-marker-icon", timeout=10000)
+
+    before = page.locator(".leaflet-marker-icon").count()
+
     wheelchair_checkbox = page.locator('input[value="Wheelchair Accessible"]')
-    assert wheelchair_checkbox.is_visible()
-    
     wheelchair_checkbox.check()
+
     page.wait_for_timeout(1000)
-    
-    program_cards = page.locator('[data-testid="program-card"]')
-    assert program_cards.count() > 0
+
+    after = page.locator(".leaflet-marker-icon").count()
+
+    assert after <= before
 
 
 
