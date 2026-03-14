@@ -66,18 +66,29 @@ In response to instructor feedback regarding fixing the map pins, due to time co
 ## [0.4.0] - 15-3-2026
 
 ### Added 
+
 - Playwright testing for app, [PR #61](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/61), [PR #69](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/69), [PR #68](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/68)
+
 - Refactored app code into separate function and created unit tests [PR #61](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/61)
+
 - Converted app to use Parquet + DuckDB instead of CSV [PR #58](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/58)
 
-### Changed
-- (Addressing Feedback) Moved the download CSV button into the dataframe card as suggested by instructor. [PR #67](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/67)   
-- (Addressing Feedback) Removed all @output decorators from app as suggested by instructor. [PR #76](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/76)
 - Updated CONTRIBUTING.md with M3 retrospective and M4 collaboration norms. [PR #73](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/73)
+
+### Changed
+
+- Addressed: Move download CSV button [issue](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/issues/65) via [PR #67](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/67).
+
+- Addressed: Remove all @output decorators [issue](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/issues/74) via [PR #76](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/76)
+
+- Addressed: Fix the map pins disappearing [issue](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/issues/79) via [PR #78](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/78)
+
+- Addressed: Increase card header size [issue](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/issues/82) via [PR #83](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/83)
 
 
 ### Fixed
-- (Addressing Feedback) Fixed the map pins disappearing issue by refactoring the app to use a plotly map instead of ipyleaflet. [PR #78](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/78)
+
+- **Feedback prioritization issue link:** https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/issues/64 
  
 ### Known Issues
 - N/A
@@ -85,7 +96,7 @@ In response to instructor feedback regarding fixing the map pins, due to time co
 
 ### Release Highlight: Map Drilldown
 
-Our advanced feature requirement was already satisfied in the previous milestones with the implementation of the map drilldown functionality. Since this requirement was already fufilled, we were told by the instructor that we didn't have to implement another advanced feature for this milestone. Therefore, just keep in mind that this feature has existed since Milestone 2.
+Our advanced feature requirement was already satisfied in the previous milestones with the implementation of the map drilldown functionality. Since this requirement was already fufilled, we were told by the instructor that we didn't have to implement another advanced feature for this milestone. The map drilldown feature allows users to click on a pin in the map, and have further information displayed about the selected food program. It treats the map as both an input and output feature.
 
 - **Option chosen:**  D
 - **PR:** [PR #19](https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/19)
@@ -93,15 +104,20 @@ Our advanced feature requirement was already satisfied in the previous milestone
 - **Feature prioritization issue link:** https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/issues/64
 
 ### Collaboration
+
 - **CONTRIBUTING.md:** https://github.com/UBC-MDS/DSCI-532_2026_22_Vancouver-LC_Food-Programs/pull/73
+
 - **M3 retrospective:** 
+
 During Milestone 3, our team successfully implemented the main features of the dashboard, including filtering, summary outputs, map display, and the AI explorer. However, we noticed several areas where our workflow could be improved.
 
 Because team members had different schedules, some work was completed close to the deadline. This caused a few pull requests to be merged later than planned, which made reviewing and testing more rushed. We also found that some discussions happened outside GitHub, so the reasoning behind certain changes was not always recorded in Issues or Pull Requests.
 
 Overall, Milestone 3 went well, but the team agreed that better planning and
 more consistent use of GitHub tools would make collaboration smoother.
+
 - **M4:** 
+
 For Milestone 4, we decided to improve our workflow to make the final stage of the project more organized.
 
 We agreed on the following rules:
@@ -134,6 +150,6 @@ Testing Coverage:
 - test_filter_panel_labels_are_rendered (playwright): Checks that the main filter panel renders its key controls. This can break if the filter panel is redesigned and the labels are changed.
 
 
-In the feedback we received from our peers and instructors, we identified only two critical issues that we absolutely needed to address, with the rest being minor. Therefore, the prioritization of the feedback was clear: two people could focus on the critical issues while the rest of the team worked on the minor ones.
+In the feedback we received from our peers and instructors, we identified only two critical issues that we absolutely needed to address to have the dashboard function, with the rest being more minor or cosmetic opinions. Therefore, the prioritization of the feedback was clear: two people could focus on the critical issues while the rest of the team worked on the selected minor ones.
 
 The lectures that shaped our work the most were the general Shiny dashboard lectures and the LLM lectures. These lectures were helpful because they provided us with the knowledge and tools to create a functional and visually appealing dashboard, as well as to implement the AI chat interface feature. These skills are in high demand, and most of us had no prior experience with them, so it was great to learn how to use these tools effectively in our project. Something that would have been nice to cover in the lectures is Plotly maps and a simple CSS tutorial for customizing the dashboard.
