@@ -148,16 +148,14 @@ html, body {
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-
-
+     
 .card_header {
-    font-weight: 600 !important;
-    font-size: 1rem !important;
+    font-weight: 700 !important;
+    font-size: 1.15rem !important;
     color: #0f3057 !important;
     border-bottom: 1px solid #eef3f7;
     padding-bottom: 0.5rem !important;
     border-radius: 8px;
-
 }
 
 .card-body {
