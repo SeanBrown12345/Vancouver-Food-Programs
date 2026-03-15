@@ -25,4 +25,12 @@ The M4 goal is to ship a stable, documented, and test-backed release on Posit Co
 | Gradescope submission | PDF linking release |
 
 ---
+## 3. Existing Core Dashboard Behavior
+
+Our app currently supports:
+
+- Filtering by meal cost, local area, and service features.
+- Map-based exploration of programs with detail and contact panels.
+- AI Explorer tab for natural-language filtering
+
 
