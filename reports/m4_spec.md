@@ -8,7 +8,7 @@ The M4 goal is to ship a stable, documented, and test-backed release on Posit Co
 
 ---
 
-## 2. Our Deliverables
+## 2. Our M4 Deliverables
 
 | Deliverable | Planned Evidence |
 |---|---|
@@ -34,3 +34,28 @@ Our app currently supports:
 - AI Explorer tab for natural-language filtering
 
 
+
+## 4. Advanced Feature Decision
+
+### Selected Option
+
+Option D: Component click event interaction.
+
+### Why we chose this Option
+
+This feature is already implemented in our dashboard and directly supports the main user journey: exploring map locations and immediately seeing actionable details for selected programs.
+
+### Implemented Behavior
+
+When a user clicks a map pin, the app treats that click as an interaction input and updates downstream outputs in real time.
+
+Triggered output updates include:
+
+1. Program details panel:
+    - Program name, time of operation, address, meal cost, and program status.
+2. Contact panel:
+    - Contact email and phone number.
+3. Service attributes:
+    - Whether the program provides meals, hampers, and wheelchair accessibility.
+
+This satisfies the M4 advanced feature requirement by using an output component (map markers) as a reactive input that filters the selected-row state and updates other UI components.
