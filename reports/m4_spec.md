@@ -19,7 +19,7 @@ This specification is intentionally written as a design-before-code plan. It doc
 | One advanced feature | Option D selected and already present (component click event interaction) |
 | Tests | At least 3 Playwright behavior tests + 1 pytest unit test |
 | Feedback prioritization issue | GitHub issue titled M4 Feedback Prioritization |
-| Feedback addressed | Instructor and TA feedback items implemented; peer items documented and triaged |
+| Feedback addressed | Instructor and TA feedback items implemented; peer items documented |
 | CONTRIBUTING.md update | M3 retrospective + M4 norms, merged via PR |
 | Spec docs updated before code | This document and issue/design notes updated first |
 | CHANGELOG 0.4.0 | Added, Changed, Fixed, Known Issues, Release Highlight, Collaboration, Reflection |
@@ -118,7 +118,7 @@ Process:
 
 | Feedback Item | Source | Priority | Owner |
 |---|---|---|---|
-| Map losing points with certain clicks | Instructor/Peer | Critical/Non-critical | Sean |
+| Map losing points with certain clicks | Instructor/Peer | Critical | Sean |
 | Move download button to same card as data frame | Instructor | Critical | Daniel |
 | remove @output calls | Instructor | Non-critical | Jennifer |
 | Increase Card Header size | Peer | Non-critical | Aitong |
