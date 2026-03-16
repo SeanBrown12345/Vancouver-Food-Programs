@@ -82,5 +82,13 @@ The dashboard data pipeline will be migrated from eager pandas filtering to quer
 
 - Confirm that meal cost, local area, and feature filters return expected row subsets after the migration.
 - Confirm that map points and summary metrics update correctly for representative filter combinations.
-- Run the existing test suite after migration to ensure evrything works well.
+- Run the existing test suite after migration to ensure everything works well.
 
+## 6. Testing
+a. We will implement three Playwright tests to cover key user-facing dashboard behaviors.
+
+- A dashboard rendering test to confirm that the main dashboard view displays the expected summary outputs and map.
+- A Meal Cost options test to confirm that the Meal Cost filter contains only the intended options: All, Free, and Low-cost.
+- Feature checkbox behavior tests to confirm that selecting Delivery Available, Provides Hampers, Takeout Available, and Wheelchair Accessible correctly updates the displayed results.
+
+b. A unit test for filter_by_meal_cost to verify that selecting All returns the full dataset, selecting Free returns only free programs, and selecting Low-cost excludes free programs, ensuring that the meal cost filtering logic behaves as intended.
