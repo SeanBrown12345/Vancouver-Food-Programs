@@ -92,3 +92,11 @@ a. We will implement three Playwright tests to cover key user-facing dashboard b
 - Feature checkbox behavior tests to confirm that selecting Delivery Available, Provides Hampers, Takeout Available, and Wheelchair Accessible correctly updates the displayed results.
 
 b. A unit test for filter_by_meal_cost to verify that selecting All returns the full dataset, selecting Free returns only free programs, and selecting Low-cost excludes free programs, ensuring that the meal cost filtering logic behaves as intended.
+
+### Test Execution
+
+README will document a single command entry point for tests in clean environments, and tests must pass before release tagging.
+
+Planned command:
+- python -m pytest
+
