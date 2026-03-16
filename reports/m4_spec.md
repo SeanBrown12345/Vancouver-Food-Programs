@@ -118,7 +118,7 @@ Process:
 
 | Feedback Item | Source | Priority | Owner |
 |---|---|---|---|
-| Map losing points with certain clicks | Instructor/Peer | Critical | Sean |
+| Map losing points with certain clicks (To achieve this we moved from ipyleaflet to plotly map)| Instructor/Peer | Critical | Sean |
 | Move download button to same card as data frame | Instructor | Critical | Daniel |
 | remove @output calls | Instructor | Non-critical | Jennifer |
 | Increase Card Header size | Peer | Non-critical | Aitong |
