@@ -27,3 +27,4 @@ dependencies:
       - querychat
       - pytest-playwright
       - playwright
+      - anywidget
