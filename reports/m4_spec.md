@@ -68,8 +68,8 @@ The dashboard data pipeline will be migrated from eager pandas filtering to quer
 ### Planned code changes:
 
 1. Add parquet-backed storage in `data/processed/food_programs.parquet` so the app reads from a columnar file instead of repeatedly loading and filtering a full in-memory table.
-2. Add DuckDB connection through Ibis:
-3. Move filter logic to the Ibis query layer inside `@reactive.calc
+2. Add a DuckDB connection through Ibis so the parquet file can be queried lazily.
+3. Move filter logic to the Ibis query layer inside `@reactive.calc` so input controls apply filters before rows are loaded into a DataFrame.
 4. Materialize data only after filters are applied by calling `execute()` at the end of the reactive calculation.
 
 ### Expected result:
@@ -85,13 +85,14 @@ The dashboard data pipeline will be migrated from eager pandas filtering to quer
 - Run the existing test suite after migration to ensure everything works well.
 
 ## 6. Testing
-a. We will implement three Playwright tests to cover key user-facing dashboard behaviors.
+
+We will implement three Playwright tests to cover key user-facing dashboard behaviors.
 
 - A dashboard rendering test to confirm that the main dashboard view displays the expected summary outputs and map.
 - A Meal Cost options test to confirm that the Meal Cost filter contains only the intended options: All, Free, and Low-cost.
 - Feature checkbox behavior tests to confirm that selecting Delivery Available, Provides Hampers, Takeout Available, and Wheelchair Accessible correctly updates the displayed results.
 
-b. A unit test for filter_by_meal_cost to verify that selecting All returns the full dataset, selecting Free returns only free programs, and selecting Low-cost excludes free programs, ensuring that the meal cost filtering logic behaves as intended.
+We will also include a unit test for `filter_by_meal_cost` to verify that selecting All returns the full dataset, selecting Free returns only free programs, and selecting Low-cost excludes free programs. This will ensure that the meal cost filtering logic behaves as intended.
 
 ### Test Execution
 
@@ -100,3 +101,24 @@ README will document a single command entry point for tests in clean environment
 Planned command:
 - python -m pytest
 
+## 7. Feedback Prioritization and Resolution
+
+To ensure that the most important issues are addressed during Milestone 4, we will organize and prioritize all feedback received from the instructor, TA, and peers.
+
+Process:
+- Create a GitHub issue titled M4 Feedback Prioritization.
+- Gather all feedback from the instructor, TA, and peers in that issue.
+- Categorize each item as either Critical or Non-critical.
+- Resolve all critical instructor and TA feedback items through pull requests.
+- Address additional non-critical instructor and TA feedback as time permits.
+- Document peer feedback in the prioritization issue and implement it only if it is reclassified as critical or fits within the team's available capacity.
+- Ensure that each team member resolves at least one feedback item.
+
+### Tracking template:
+
+| Feedback Item | Source | Priority | Owner |
+|---|---|---|---|
+| Map losing points with certain clicks | Instructor/Peer | Critical/Non-critical | Sean |
+| Move download button to same card as data frame | Instructor | Critical | Daniel |
+| remove @output calls | Instructor | Non-critical | Jennifer |
+| Increase Card Header size | Peer | Non-critical | Aitong |
