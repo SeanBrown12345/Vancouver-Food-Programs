@@ -1,28 +1,58 @@
-from anyio import Path
+from pathlib import Path
 
 from shiny import App, ui, render, reactive
 from shinywidgets import output_widget, render_widget
 import pandas as pd
-import ipyleaflet
+import ibis
 import plotly.express as px
+import plotly.graph_objects as go
 
-from chatlas import ChatGithub
 from dotenv import load_dotenv
-from querychat import QueryChat
+from querychat import QueryChat    
 
+# Load in .env file
 load_dotenv()
 
-url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/free-and-low-cost-food-programs/records?limit=100"
-df = pd.read_json(url)
-df = pd.json_normalize(df["results"])
+# Convert to parquet (runs once at startup)
+PARQUET_PATH = Path("data/processed/food_programs.parquet")
+
+# Checks if parquet files exist, and if not create folder
+if not PARQUET_PATH.exists():
+    PARQUET_PATH.parent.mkdir(parents=True, exist_ok=True)
+    url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/free-and-low-cost-food-programs/records?limit=100"
+    raw = pd.read_json(url)
+    df_init = pd.json_normalize(raw["results"])
+    df_init.to_parquet(PARQUET_PATH, index=False)
+    print(f"Parquet file created at {PARQUET_PATH}")
+else:
+    print(f"Parquet file already exists at {PARQUET_PATH}")
+
+# Connect to parquet via ibis + DuckDB
+con = ibis.duckdb.connect()
+table = con.read_parquet(str(PARQUET_PATH))
 
 
+def filter_by_meal_cost(t, meal_cost):
+    if meal_cost == "All":
+        return t
+    if meal_cost == "Free":
+        return t.filter(t.meal_cost.lower() == "free")
+    if meal_cost == "Low-cost":
+        return t.filter(
+            t.meal_cost.lower().contains("low cost") |
+            t.meal_cost.lower().startswith("$")
+        )
+    
+# Build UI choices from ibis
 meal_cost_choices = ["All", "Free", "Low-cost"]
-area_choices = sorted([str(x) for x in df["local_areas"].dropna().unique()])
+area_choices = sorted([
+    str(x) for x in
+    table.select("local_areas").distinct().execute()["local_areas"].dropna()
+])
 
-
+# Provide full df to querychat
+df = table.execute()
 qc = QueryChat(df, "food_programs", client="openai/gpt-4.1")
-
 
 app_ui = ui.page_fillable(
 #    ui.tags.link(href="styles.css", rel="stylesheet"),
@@ -118,16 +148,14 @@ html, body {
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-
-
+     
 .card_header {
-    font-weight: 600 !important;
-    font-size: 1rem !important;
+    font-weight: 700 !important;
+    font-size: 1.15rem !important;
     color: #0f3057 !important;
     border-bottom: 1px solid #eef3f7;
     padding-bottom: 0.5rem !important;
     border-radius: 8px;
-
 }
 
 .card-body {
@@ -357,13 +385,14 @@ hr {
 
                 ui.layout_columns(
 
-                    ui.download_button(
-                        "downloadData",
-                        "Download"
-                    ),
+
 
                     ui.card(
                         ui.card_header("Filtered Data"),
+                        ui.download_button(
+                            "downloadData",
+                            "Download"
+                        ),
                         ui.output_data_frame("ai_data_table"),
                     ),
 
@@ -386,42 +415,26 @@ def server(input, output, session):
 
     @reactive.calc
     def filtered_df():
-        dff = df.dropna(subset=["latitude", "longitude"])
-
-        if input.meal_cost() != "All":
-            if input.meal_cost() == "Free":
-                dff = dff[dff["meal_cost"].astype(str).str.lower() == "free"]
-            else:  # Low-cost
-                dff = dff[
-                    dff["meal_cost"].astype(str).str.lower().str.contains("low cost") |
-                    dff["meal_cost"].astype(str).str.startswith("$")
-                ]
-
+        t = table
+        t = t.filter(t.latitude.notnull() & t.longitude.notnull())
+        t = filter_by_meal_cost(t, input.meal_cost())
         if input.area():
-            dff = dff[dff["local_areas"].astype(str).isin(input.area())]
-
+            t = t.filter(t.local_areas.isin(list(input.area())))
         features = input.features()
-
         if "Delivery Available" in features:
-            dff = dff[dff["delivery_available"].astype(str) == "Yes"]
-
+            t = t.filter(t.delivery_available == "Yes")
         if "Provides Hampers" in features:
-            dff = dff[dff["provides_hampers"].astype(str) == "True"]
-
+            t = t.filter(t.provides_hampers == "True")
         if "Takeout Available" in features:
-            dff = dff[dff["takeout_available"].astype(str) == "Yes"]
-
+            t = t.filter(t.takeout_available == "Yes")
         if "Wheelchair Accessible" in features:
-            dff = dff[dff["wheelchair_accessible"].astype(str) == "Yes"]
+            t = t.filter(t.wheelchair_accessible == "Yes")
+        return t.execute()
 
-        return dff
-
-    @output
     @render.text
     def total_locations():
         return str(len(filtered_df()))
 
-    @output
     @render.text
     def free_prop():
         dff = filtered_df()
@@ -429,7 +442,6 @@ def server(input, output, session):
             return "0%"
         return f"{(dff['meal_cost'].astype(str).str.lower() == 'free').mean():.1%}"
 
-    @output
     @render.text
     def accessibility_prop():
         dff = filtered_df()
@@ -438,27 +450,54 @@ def server(input, output, session):
         accessible = dff["wheelchair_accessible"].astype(str).str.lower() == "yes"
         return f"{accessible.mean():.1%}"
 
-    @output
     @render_widget
     def map():
-        dff = filtered_df()
-        m = ipyleaflet.Map(center=(49.2827, -123.1207), zoom=12)
+        dff = filtered_df().reset_index(drop=True).copy()
 
-        for _, row in dff.iterrows():
-            marker = ipyleaflet.Marker(
-                location=(float(row["latitude"]), float(row["longitude"])),
-                title=str(row.get("program_name", "")),
-                draggable=False
+        if len(dff) == 0:
+            fig = go.FigureWidget()
+            fig.update_layout(
+                mapbox_style="open-street-map",
+                mapbox_center={"lat": 49.25, "lon": -123.1207},
+                margin=dict(l=0, r=0, t=0, b=0),
+                height=600
             )
+            return fig
 
-            def handle_click(event=None, row=row, **kwargs):
-                selected_row.set(row.to_dict())
+        fig = px.scatter_mapbox(
+            dff,
+            lat="latitude",
+            lon="longitude",
+            hover_name="organization_name",
+            hover_data={
+            "organization_name": False,
+            "meal_cost": False,
+            "latitude": False,
+            "longitude": False
+            },
+            zoom=11
+        )
+        fig.update_layout(
+            mapbox_style="open-street-map",
+            mapbox_center={"lat": 49.25, "lon": -123.1207},
+            margin=dict(l=0, r=0, t=0, b=0),
+            height=600
+        )
 
-            marker.on_click(handle_click)
-            m.add_layer(marker)
+        fig = go.FigureWidget(fig)
 
-        return m
+        def handle_click(trace, points, state):
+            if not points.point_inds:
+                return
+            idx = points.point_inds[0]
+            row = dff.iloc[idx].to_dict()
+            selected_row.set(row)
+        
+        for trace in fig.data:
+            trace.on_click(handle_click)
 
+        return fig
+    
     @output
     @render.ui
     def selected_details():
@@ -482,7 +521,6 @@ def server(input, output, session):
             ui.p(ui.strong("Wheelchair Accessible: "), row.get("wheelchair_accessible", ""))
         )
 
-    @output
     @render.ui
     def contact_info():
         row = selected_row.get()
@@ -505,17 +543,14 @@ def server(input, output, session):
             return df.iloc[0:0]
         return dff
 
-    @output
     @render.data_frame
     def ai_data_table():
         return ai_df()
 
-    @output
     @render.text
     def ai_total_locations():
         return str(len(ai_df()))
 
-    @output
     @render.text
     def ai_free_prop():
         dff = ai_df()
@@ -531,8 +566,6 @@ def server(input, output, session):
     async def downloadData():
         dff = ai_df()
         yield dff.to_csv(index=False)
-
-
 
 app_dir = Path(__file__).parent
 app = App(app_ui, server, static_assets=app_dir / "www")

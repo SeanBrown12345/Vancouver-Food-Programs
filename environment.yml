@@ -16,8 +16,15 @@ dependencies:
   - vegafusion=1.6.9
   - shinywidgets
   - ipyleaflet
+  - pyarrow
+  - plotly
+  - duckdb
+  - ibis-framework
   - pip
   - pip:
       - python-dotenv
       - chatlas
       - querychat
+      - pytest-playwright
+      - playwright
+      - anywidget
